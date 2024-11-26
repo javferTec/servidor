@@ -1,0 +1,884 @@
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Desarrollo Wen en Entorno Servidor]]></title><description><![CDATA[Obsidian digital garden]]></description><link>http://github.com/dylang/node-rss</link><image><url>lib\media\favicon.png</url><title>Desarrollo Wen en Entorno Servidor</title><link/></image><generator>Webpage HTML Export plugin for Obsidian</generator><lastBuildDate>Tue, 26 Nov 2024 11:57:19 GMT</lastBuildDate><atom:link href="lib\rss.xml" rel="self" type="application/rss+xml"/><pubDate>Tue, 26 Nov 2024 11:57:18 GMT</pubDate><ttl>60</ttl><dc:creator/><item><title><![CDATA[ARQUITECTURA POR CAPAS]]></title><description><![CDATA[ 
+ <br><br><br>La arquitectura en capas es un modelo de diseño de software, cuya base es la separación de las diferentes funcionalidades del sistema en capas o niveles, donde cada capa se encarga de un conjunto de tareas específicas y se comunica con los niveles adyacentes mediante interfaces bien definidas.<br><br>
+<br>
+PRESENTATION: Maneja las solicitudes del usuario y coordina la lógica de presentación. Se comunica con la capa de dominio para obtener los datos y realizar operaciones.
+
+<br>
+DOMAIN: Reside la lógica de la aplicación. Contiene las reglas y operaciones que definen como funciona el sistema. Las entidades y servicios en esta capa representan los conceptos centrales de la aplicación.
+
+<br>
+REPOSITORY: Se encarga de interactuar con el almacén de datos, una base de datos por ejemplo. Proporciona métodos para acceder y manipular los datos de manera abstracta, ocultando los detalles de implementación específicos.
+
+<br><img alt="img" src="1-ariquitectura-por-capas\presentacion-dominio-persistencia.png">]]></description><link>1-ariquitectura-por-capas\arquitectura-por-capas.html</link><guid isPermaLink="false">1- Ariquitectura por capas/Arquitectura por capas.md</guid><pubDate>Mon, 25 Nov 2024 16:26:49 GMT</pubDate><enclosure url="1-ariquitectura-por-capas\presentacion-dominio-persistencia.png" length="0" type="image/png"/><content:encoded>&lt;figure&gt;&lt;img src="1-ariquitectura-por-capas\presentacion-dominio-persistencia.png"&gt;&lt;/figure&gt;</content:encoded></item><item><title><![CDATA[API-REST]]></title><description><![CDATA[ 
+ <br><br>Cualquier aplicación web se basa en una arquitectura cliente-servidor, donde un servidor queda a la espera de conexiones de clientes, y los clientes se conectan a los servidores para solicitar ciertos recursos.<br>Estas comunicaciones se realizan mediante HTTP o HTTPS, donde el cliente solicita un recurso y el servidor intenta ofrecerlo.<br>Para solicitar un recurso se realiza mediante una URL, la cual consta de varias partes:<br>
+<br>El protocolo empleado (HTTP o HTTPS)
+<br>El nombre de dominio, que identifica al servidor y lo localiza en la red.
+<br>La ruta hacia el recurso solicitado, dentro del propio servidor. Esta última parte también suele denominarse URI (identificador uniforme de recurso, o en inglés, Uniform Resource Identifier). Esta URI identifica unívocamente el recurso buscado entre todos los demás recursos que pueda albergar el servidor.
+<br><br>REST son las siglas de Representational State Transfer, y designa un estilo de arquitectura de aplicaciones distribuidas, como las aplicaciones web. En un sistema REST, identificamos cada recurso a solicitar con una URI (identificador uniforme de recurso), y definimos un conjunto delimitado de comandos o métodos a realizar, que típicamente son:<br>
+<br>GET: para obtener resultados de algún tipo (listados completos o filtrados por alguna condición)
+<br>POST: para realizar inserciones o añadir elementos en un conjunto de datos
+<br>PUT: para realizar modificaciones o actualizaciones del conjunto de datos
+<br>DELETE: para realizar borrados del conjunto de datos
+<br>Existen otros tipos de comandos o métodos, como por ejemplo PATCH (similar a PUT, pero para cambios parciales), HEAD (para consultar sólo el encabezado de la respuesta obtenida), etc. Nos centraremos, no obstante, en los cuatro métodos principales anteriores.<br>Por lo tanto, identificando el recurso a solicitar y el comando a aplicarle, el servidor que ofrece esta API REST proporciona una respuesta a esa petición. Esta respuesta típicamente viene dada por un mensaje en formato JSON o XML.<br><br>
+<br>
+Códigos 1XX: representan información sobre una PETICIÓN INCOMPLETA. No son muy habituales, pero se pueden emplear cuando la petición es muy larga, y se envía antes una cabecera para comprobar si se puede procesar dicha petición.
+
+<br>
+Códigos 2xx: representan peticiones que se han podido atender satisfactoriamente, PETICIONES EXITOSAS. El código más habitual es el 200, respuesta estándar para las peticiones que son correctas. Existen otras variantes, como el código 201, que se envía cuando se ha insertado o creado un nuevo recurso en el servidor (una inserción en una base de datos, por ejemplo), o el código 204, que indica que la petición se ha atendido bien, pero no se ha devuelto nada como respuesta.
+
+<br>
+Códigos 3xx: son códigos de REDIRECCIÓN, que indican que de algún modo la petición original se ha redirigido a otro recurso del servidor. Por ejemplo, el código 301 indica que el recurso solicitado se ha movido permanentemente a otra URL. El código 304 indica que el recurso solicitado no ha cambiado desde la última vez que se solicitó, por si se quiere recuperar de la caché local en ese caso.
+
+<br>
+Códigos 4xx: indican un error por parte del CLIENTE. El más típico es el error 404, que indica que estamos solicitando una URL o recurso que no existe. Pero también hay otros habituales, como el 401 (cliente no autorizado), o 400 (los datos de la petición no son correctos, por ejemplo, porque los campos del formulario no sean válidos).
+
+<br>
+Códigos 5xx: indican un error por parte del SERVIDOR. Por ejemplo, el error 500 indica un error interno del servidor, o el 504, que es un error de timeout por tiempo excesivo en emitir la respuesta.
+
+<br><br>Un endpoint se refiere a una URL específica a la que se puede realizar una solicitud HTTP (GET, POST, PUT, DELETE…) para interactuar con un recurso o conjunto de recursos. Cada endpoint está asociado con una operación y puede devolver o manipular datos en formato JSON, XML u otro formato, según lo definido por la API.<br>Hay una serie de buenas prácticas a la hora de crear tus endpoints. Algunas de ellas son:<br>
+<br>Deberían siempre ser sustantivos, nunca verbos. El tipo de acción (el verbo) viene determinado por el método HTTP (GET, PUT, POST, DELETE…).
+<br>Los recursos tienen que estar en plural, aunque se devuelva uno sólo.
+<br>Para relacionar recursos, se van anidando recursos específicos en la URL.
+<br>Vamos a ver varios ejemplos para clarificar lo anterior:<br>
+<br>GET /books - Devuelve el listado de todos los libros.
+<br>GET /books/12 - Devuelve el libro con id 12.
+<br>POST /books - Crea un nuevo libro
+<br>PUT /books/12 - Actualiza el libro con id 12.
+<br>DELETE /books/12 - Elimina el libro con id 12
+<br>GET /books/12/authors - Devuelve el listado de autores del libro con id 12.
+]]></description><link>2-api-rest\api-rest.html</link><guid isPermaLink="false">2- API Rest/API-Rest.md</guid><pubDate>Mon, 25 Nov 2024 11:45:39 GMT</pubDate></item><item><title><![CDATA[CAPA DE PRESENTACIÓN]]></title><description><![CDATA[ 
+ <br><br>La capa de presentación en una arquitectura por capas se encarga de gestionar la interacción del usuario con la aplicación. Su principal función es recibir las solicitudes del usuario (normalmente a través de controladores REST o MVC en el caso de aplicaciones web), procesarlas y devolver una respuesta adecuada. Aquí se implementan los controladores que definen los endpoints de la&nbsp;API&nbsp;y, opcionalmente, la lógica de validación básica de las solicitudes.<br>Esta capa debe ser lo más independiente posible de la lógica de negocio y la persistencia. Se comunica con la capa de dominio o de aplicación para ejecutar los casos de uso requeridos, devolviendo al usuario las respuestas en el formato adecuado (como JSON o&nbsp;HTML). También puede encargarse del manejo de excepciones y la validación básica de los datos de entrada.<br>ESTRUCTURA DE CARPETAS CONTROLLER:<br>├───admin<br>
+│   │   BookAdminController.java // Controlador del admin<br>
+│   │<br>
+│   └───adminModel // Modelos únicos del admin<br>
+│       └───book<br>
+│               BookAdminCollection.java // Colección de datos (getAll)<br>
+│<br>
+├───common<br>
+│   │   BaseController.java //Controlador con funcionalidades genéricas (herencia)<br>
+│   │<br>
+│   ├───entity //Entidades comunes a los roles<br>
+│   │   └───model //Modelos de datos<br>
+│   │       ├───author<br>
+│   │       │       AuthorCollection.java<br>
+│   │       │<br>
+│   │       └───publisher<br>
+│   │               PublisherCollection.java<br>
+│   │   └───mapper /En el caso de tener que mapear entidades comunes a los roles<br>
+│   │<br>
+│   └───pagination // Paquete que centra la lógica de la paginación<br>
+│           PaginatedResponse.java<br>
+│<br>
+└───user<br>
+│   BookUserController.java //Controlador de usuario sin privilegios<br>
+│<br>
+├───userMapper //Mapeadores para los modelos específicos de usuario<br>
+│   └───book<br>
+│           BookUserMapper.java<br>
+│<br>
+└───userModel //Modelos específicos de usuario<br>
+└───book<br>
+BookUserCollection.java //Colección de datos (getAll)<br>
+BookUserDetail.java //Respuesta de un registro (getByX)<br><br>Note
+Para mapear entre modelos de Dominio y Presentación (DTO) se utiliza ModelMapper. Los tipos de datos simples pueden ser mapeados automáticamente sin necesidad de indicarle el cómo. Sin embargo, si utilizamos tipos de datos personalizados (clases propias), debemos indicarle explícitamente cómo debe hacerlo.
+Para poder utilizar ModelMapper, debemos añadir la dependencia correspondiente en el pom.xml y crear una instancia. A continuación, bajo se muestra un ejemplo de uso:
+<br>private static final ModelMapper modelMapper = new ModelMapper();  
+  
+public static BookUserDetail toBookDetail(Book book) {  
+    // Mapear el libro a BookUserDetail  
+    BookUserDetail bookUserDetail = modelMapper.map(book, BookUserDetail.class);  
+  
+    // Mapea la editorial  
+    if (book.getPublisher() != null) {  
+        bookUserDetail.setPublisherCollection(new PublisherCollection(  
+                book.getPublisher().getId(),  
+                book.getPublisher().getName()  
+        ));  
+    }  
+  
+    // Mapea los autores  
+    if (book.getAuthors() != null) {  
+        List&lt;AuthorCollection&gt; authorsCollection = book.getAuthors().stream()  
+                .map(author -&gt; new AuthorCollection(author.getId(), author.getName()))  
+                .collect(Collectors.toList());  
+        bookUserDetail.setAuthorsCollection(authorsCollection);  
+    }  
+  
+    // Mapea los géneros  
+    if (book.getGenres() != null) {  
+        List&lt;String&gt; genres = book.getGenres().stream()  
+                .map(genre -&gt; genre.getName())  
+                .collect(Collectors.toList());  
+        bookUserDetail.setGenres(genres);  
+    }  
+  
+    // Mapea la categoría  
+    if (book.getCategory() != null) {  
+        bookUserDetail.setCategory(book.getCategory().getName());  
+    }  
+  
+    return bookUserDetail;  
+}
+]]></description><link>3-presentacion\capa-de-presentacion.html</link><guid isPermaLink="false">3- Presentacion/Capa de Presentacion.md</guid><pubDate>Tue, 26 Nov 2024 10:14:43 GMT</pubDate></item><item><title><![CDATA[CAPA DE DOMINIO]]></title><description><![CDATA[ 
+ <br><br>En una arquitectura limpia, la capa de dominio es el corazón de la aplicación. Aquí es donde se encuentran las reglas de negocio y la lógica fundamental que define el comportamiento del sistema. Esta capa debe estar&nbsp;completamente aislada de cualquier detalle de implementación o infraestructura, como bases de datos, frameworks o herramientas de persistencia. Esto permite que los cambios en estos detalles no afecten la lógica central del negocio.<br>ESTRUCTURA DE CARPETAS DOMAIN:<br>├───model //Entidades o modelos de la aplicación<br>
+│       Author.java<br>
+│       Book.java<br>
+│       Category.java<br>
+│       Genre.java<br>
+│       Publisher.java<br>
+│<br>
+├───repository //Interfaces de repositorio<br>
+│       AuthorRepository.java<br>
+│       BookRepository.java<br>
+│       CategoryRepository.java<br>
+│       GenreRepository.java<br>
+│       PublisherRepository.java<br>
+│<br>
+├───service //Interfaces de los servicios<br>
+│   │   AuthorService.java<br>
+│   │   BookService.java<br>
+│   │   CategoryService.java<br>
+│   │   GenreService.java<br>
+│   │   PublisherService.java<br>
+│   │<br>
+│   └───impl //Implementación de los servicios<br>
+│           AuthorServiceImpl.java<br>
+│           BookServiceImpl.java<br>
+│           CategoryServiceImpl.java<br>
+│           GenreServiceImpl.java<br>
+│           PublisherServiceImpl.java<br>
+│<br>
+└───useCase //Casos de uso. Dividido por entidades y dentro de este por los roles<br>
+└───book<br>
+├───admin //Interfaces de los casos de uso de admin<br>
+│   │   BookDeleteUseCase.java<br>
+│   │   BookInsertAuthorsUseCase.java<br>
+│   │   BookInsertGenresUseCase.java<br>
+│   │   BookInsertUseCase.java<br>
+│   │   BookRelationHandler.java //Maneja las relaciones uno a uno, uno a muchos y                                                              muchos a muchos en INSERT, UPDATE y DELTE (para                                                            no repetir código en cada caso de uso)<br>
+│   │   BookUpdateUseCase.java<br>
+│   │<br>
+│   └───impl //Implementaciones de los casos de uso de admin<br>
+│           BookDeleteUseCaseImpl.java<br>
+│           BookInsertAuthorsUseCaseImpl.java<br>
+│           BookInsertGenresUseCaseImpl.java a un libro<br>
+│           BookInsertUseCaseImpl.java<br>
+│           BookRelationHandlerImpl.java<br>
+│           BookUpdateUseCaseImpl.java<br>
+│<br>
+├───common //Interfaces de los casos de uso comunes<br>
+│   │   BookCountUseCase.java<br>
+│   │   BookGetAllUseCase.java<br>
+│   │   BookGetByIsbnUseCase.java<br>
+│   │<br>
+│   └───impl //Implementaciones de los casos de uso comunes<br>
+│           BookCountUseCaseImpl.java<br>
+│           BookGetAllUseCaseImpl.java<br>
+│           BookGetByIsbnUseCaseImpl.java<br>
+│<br>
+└───user //Interfaces de los casos de uso de user*<br><br>Note
+Movemos las interfaces del repositorio a Dominio para la INYECCIÓN DE DEPENDENCIAS EN LA CAPA DE DOMINIO. 
+<br>Note
+Los CASOS DE USO SON COMUNES, por lo tanto las entidades también, mapeamos en el controlador.<br>
+Los casos de uso son los encargados de llamar a los servicios para realizar las acciones correspondientes. Los servicios de momento solo hacen acciones básicas sobre los recursos. Los controladores llaman a los casos de uso.
+]]></description><link>4-domain\capa-de-dominio.html</link><guid isPermaLink="false">4- Domain/Capa de Dominio.md</guid><pubDate>Tue, 26 Nov 2024 10:14:32 GMT</pubDate></item><item><title><![CDATA[CAPA DE PERSISTENCIA]]></title><description><![CDATA[ 
+ <br><br>En una arquitectura limpia, los repositorios tienen la responsabilidad de gestionar el acceso a los datos desde la perspectiva del dominio. Esto significa que trabajan exclusivamente con modelos de dominio, abstrayendo por completo los detalles de cómo y dónde se almacenan los datos. Su objetivo principal es proporcionar una interfaz coherente que permita a la capa de dominio interactuar con los datos sin preocuparse por las particularidades de la persistencia.<br>Para lograr este aislamiento, los repositorios no deberían implementar directamente las operaciones específicas de almacenamiento o recuperación. Aquí es donde entra en juego la introducción de los&nbsp;DAOs, que encapsulan los detalles de persistencia. Por ejemplo, en un sistema que combine una base de datos y un sistema de caché, los repositorios podrían delegar en un DAO el acceso a la caché para recuperar datos rápidamente o almacenar temporalmente resultados, manteniendo así su enfoque en los modelos de dominio.<br>Note
+Un repositorio puede llamar a varios DAO. Por ejemplo DB y Caché
+<br>DAO (Data Access Object)<br>El patrón DAO (Data Access Object) se utiliza para separar y encapsular el acceso a los datos, proporcionando una capa de abstracción que aísla la lógica de acceso a datos del resto de la aplicación. Esto permite que el resto de la aplicación, y en particular la capa de dominio, interactúe con los datos sin preocuparse por los detalles específicos de persistencia. Los DAOs facilitan la delegación de las operaciones de acceso a los datos, de modo que los repositorios se puedan enfocar únicamente en trabajar con los modelos de dominio.<br>**ESTRUCTURA DE CARPETAS PERSISTENCE:<br>├───dao<br>
+│   ├───cache //Sistema de acceso a caché (interfaces)<br>
+│   │   │   BookDaoCache.java<br>
+│   │   │   GenericDaoCache.java<br>
+│   │   │<br>
+│   │   └───impl<br>
+│   │           BookDaoCacheImpl.java<br>
+│   │<br>
+│   └───db //Sistema de acceso a base de datos (interfaces)<br>
+│       │   AuthorDaoDb.java<br>
+│       │   BookDaoDb.java<br>
+│       │   CategoryDaoDb.java<br>
+│       │   GenericDaoDb.java DAO genérico que ya maneja las relaciones en el CRUD<br>
+│       │   GenreDaoDb.java<br>
+│       │   PublisherDaoDb.java<br>
+│       │<br>
+│       └───jdbc //Implementación de las interfaces para JDBC<br>
+│           │   AuthorDaoJdbc.java<br>
+│           │   BaseDaoJdbc.java //Implementación del DAO genérico (existe la herencia)<br>
+│           │   BookDaoJdbc.java<br>
+│           │   CategoryDaoJdbc.java<br>
+│           │   GenreDaoJdbc.java<br>
+│           │   PublisherDaoJdbc.java<br>
+│           │<br>
+│           ├───mapper //Mapeadores de ResultSet a las entidades de dominio<br>
+│           │   ├───generic<br>
+│           │   │       GenericRowMapper.java // Mapeador genérico<br>
+│           │   │<br>
+│           │   └───specific //Si alguna clase tuviera algún mapeo especial<br>
+│           │           .gitkeep<br>
+│           │<br>
+│           └───utils //Carpeta de utilidades para el mapeador genérico<br>
+│               ├───cache //Caché para las anotaciones. Al utilizar este sistema mejoramos el                                                     inconveniente de rendimiento de la reflexión<br>
+│               │       ReflectionColumnFieldCache.java //Para la anotación @Column<br>
+│               │<br>
+│               ├───metadata //Extractor de metadatos<br>
+│               │       EntityMetadataExtractor.java<br>
+│               │<br>
+│               ├───operation // Tipos de operaciones que se pueden realizar<br>
+│               │       OperationType.java //Enum<br>
+│               │<br>
+│               ├───relation //Maneja las relaciones<br>
+│               │       RelationMapperHandler.java //En el mapeo<br>
+│               │       RelationOperationHandler.java //En las operaciones INSERT, UPDATE y DELETE<br>
+│               │<br>
+│               ├───sql //Código SQL centralizado<br>
+│               │       SqlBuilderOperation.java //SQL para las operaciones<br>
+│               │       SqlBuilderRelation.java //SQL para las relaciones<br>
+│               │<br>
+│               └───text //Métodos para funcionalidades de texto<br>
+│                       StringUtil.java //Métodos para la clase String<br>
+│<br>
+└───repository<br>
+└───impl //Implementación de las interfaces definidas en dominio<br>
+AuthorRepositoryJdbc.java<br>
+BookRepositoryJdbc.java<br>
+CategoryRepositoryJdbc.java<br>
+GenreRepositoryJdbc.java<br>
+PublisherRepositoryJdbc.java<br>]]></description><link>5-persistence\capa-de-persistencia.html</link><guid isPermaLink="false">5- Persistence/Capa de persistencia.md</guid><pubDate>Tue, 26 Nov 2024 10:14:21 GMT</pubDate></item><item><title><![CDATA[PAQUETE COMÚN A TODA LA APLICACIÓN]]></title><description><![CDATA[ 
+ <br><br>ESTRUCTURA DE CARPETAS COMMON:<br>├───annotation //Anotaciones<br>
+│   ├───common<br>
+│   │       Mapper.java //Usada en Controller y Persistence<br>
+│   │<br>
+│   ├───domain //Creadas para que el dominio no tenga tanta dependencia con SpringBoot<br>
+│   │       DomainService.java<br>
+│   │       DomainTransactional.java<br>
+│   │       DomainUseCase.java<br>
+│   │<br>
+│   └───persistence //Relacionadas con BaseDao, el mapeador genérico y los DAOs<br>
+│           Column.java<br>
+│           Dao.java<br>
+│           ManyToMany.java<br>
+│           OneToMany.java<br>
+│           OneToOne.java<br>
+│           PrimaryKey.java<br>
+│           Table.java<br>
+│<br>
+├───errorHandler //Manejador de errores de la API<br>
+│       ApiExceptionHandler.java<br>
+│       ErrorMessage.java<br>
+│<br>
+├───exception //Excepciones<br>
+│       MappingException.java<br>
+│       ResourceAlreadyExistsException.java<br>
+│       ResourceNotFoundException.java<br>
+│<br>
+└───locale //Para que la aplicación pueda manejar varios idiomas<br>
+CustomLocaleChangeInterceptor.java<br>
+LanguageUtils.java<br>
+LocaleConfig.java]]></description><link>6-common\package-common.html</link><guid isPermaLink="false">6- Common/Package common.md</guid><pubDate>Mon, 25 Nov 2024 15:28:13 GMT</pubDate></item><item><title><![CDATA[getAll]]></title><description><![CDATA[ 
+ <br><br>BaseController.getPageSize(Integer)
+└── Integer.parseInt(String)
+
+BookGetAllUseCase.execute(int, int)
+└── BookGetAllUseCaseImpl.execute(int, int)
+    └── BookService.getAll()
+        └── BookServiceImpl.getAll()
+            └── BookRepository.getAll()
+                └── BookRepositoryJdbc.getAll()
+                    └── GenericDaoDb.getAll()
+                        ├── PublisherDaoJdbc.getAll()
+                        │   └── BaseDaoJdbc.getAll()
+                        ├── AuthorDaoJdbc.getAll()
+                        │   └── BaseDaoJdbc.getAll()
+                        ├── CategoryDaoJdbc.getAll()
+                        │   └── BaseDaoJdbc.getAll()
+                        ├── GenreDaoJdbc.getAll()
+                        │   └── BaseDaoJdbc.getAll()
+                        ├── BookDaoJdbc.getAll()
+                        │   └── BaseDaoJdbc.getAll()
+                        └── BaseDaoJdbc.getAll()
+                            ├── EntityMetadataExtractor.getSelectTable()
+                            ├── JdbcTemplate.query(String, RowMapper&lt;T&gt;)
+                            ├── AuthorDaoJdbc.getAll()
+                            ├── PublisherDaoJdbc.getAll()
+                            ├── CategoryDaoJdbc.getAll()
+                            ├── BookDaoJdbc.getAll()
+                            └── GenreDaoJdbc.getAll()
+
+ModelMapper.map(Object, Class&lt;D&gt;)
+
+BookCountUseCase.execute()
+└── BookCountUseCaseImpl.execute()
+    └── BookService.count()
+        └── BookServiceImpl.count()
+            └── BookRepository.count()
+                └── BookRepositoryJdbc.count()
+                    └── GenericDaoDb.count()
+                        ├── BaseDaoJdbc.count()
+                        │   ├── EntityMetadataExtractor.getTableName()
+                        │   │   └── EntityMetadataExtractor.getTableName(Class&lt;?&gt;)
+                        │   ├── JdbcTemplate.queryForObject(String, Class&lt;T&gt;)
+                        │   ├── CategoryDaoJdbc.count()
+                        │   ├── GenreDaoJdbc.count()
+                        │   ├── AuthorDaoJdbc.count()
+                        │   ├── PublisherDaoJdbc.count()
+                        │   └── BookDaoJdbc.count()
+                        ├── CategoryDaoJdbc.count()
+                        │   └── BaseDaoJdbc.count()
+                        ├── GenreDaoJdbc.count()
+                        │   └── BaseDaoJdbc.count()
+                        ├── AuthorDaoJdbc.count()
+                        │   └── BaseDaoJdbc.count()
+                        ├── PublisherDaoJdbc.count()
+                        │   └── BaseDaoJdbc.count()
+                        └── BookDaoJdbc.count()
+                            └── BaseDaoJdbc.count()
+
+BaseController.getAll(int, Integer, Function&lt;Integer, List&lt;Entity&gt;&gt;, Function&lt;Entity, Collection&gt;, int, String)
+├── BaseController.getPageSize(Integer)
+│   └── Integer.parseInt(String)
+├── Function.apply(T)
+│   ├── apply methods from various sources (e.g., jdk, Spring, other libraries)
+└── Collection.stream()
+    ├── stream() methods from various sources (e.g., Collections, Java Stream API)
+    └── Stream.map(Function&lt;? super T, ? extends R&gt;)
+        └── ReferencePipeline.map(Function&lt;? super P_OUT, ? extends R&gt;)
+            └── Stream.toList()
+                └── ReferencePipeline.toList()
+
+BaseController.createPaginatedResponse(List&lt;T&gt;, int, int, int, String)
+├── PaginatedResponse.PaginatedResponse(List&lt;T&gt;, int, int, int, String)
+└── ResponseEntity.ResponseEntity(T, HttpStatusCode)
+
+<br><br><br>BookGetByIsbnUseCase.execute(String)
+ └── BookGetByIsbnUseCaseImpl.execute(String)
+      └── BookService.getByIsbn(String)
+           └── BookServiceImpl.getByIsbn(String)
+                └── BookRepository.getByIsbn(String)
+                     └── BookRepositoryJdbc.getByIsbn(String)
+                          ├── BookDaoCache.getByIsbn(String)
+                          │    └── BookDaoCacheImpl.getByIsbn(String)
+                          │         ├── SystemLogHandler.println(String)
+                          │         └── BookDaoDb.getByIsbn(String)
+                          │              └── BookDaoJdbc.getByIsbn(String)
+                          ├── GenericDaoCache.save(T)
+                          │    └── BookDaoCacheImpl.save(Book)
+                          │         ├── Book.java (domain model)
+                          │         └── Map.put(K, V)
+                          │              └── [Various implementations in java.util and external libraries]
+                          ├── System.currentTimeMillis()
+                          ├── Optional.ifPresent(Consumer)
+                          └── Optional.or(Supplier)
+
+ResourceNotFoundException (extends RuntimeException)
+ └── Thrown in case of missing entity
+
+BaseController.getByIsbn(String, Function&lt;String, Entity&gt;, Function&lt;Entity, Detail&gt;)
+ ├── Function.apply(T)
+ │    └── [Various implementations in java.util.function and external libraries]
+ └── ResponseEntity(T, HttpStatusCode)
+
+<br><br><br>BookInsertAuthorsUseCase.execute(Integer, List&lt;Author&gt;)
+ └── BookInsertAuthorsUseCaseImpl.execute(Integer, List&lt;Author&gt;)
+     └── BookService.getById(long)
+         └── BookServiceImpl.getById(long)
+             └── BookRepository.getById(long)
+                 └── BookRepositoryJdbc.getById(long)
+                     └── GenericDaoDb.getById(long)
+                         ├── BaseDaoJdbc.getById(long)
+                         │   ├── EntityMetadataExtractor.getSelectTable()
+                         │   ├── BaseDaoJdbc.queryForOptional(String, Object...)
+                         │   ├── GenreDaoJdbc.getById(long)
+                         │   ├── PublisherDaoJdbc.getById(long)
+                         │   ├── BookDaoJdbc.getById(long)
+                         │   ├── AuthorDaoJdbc.getById(long)
+                         │   └── CategoryDaoJdbc.getById(long)
+                         └── ResourceNotFoundException.ResourceNotFoundException(String)
+                             └── RuntimeException.RuntimeException(String)
+ └── AuthorService.getAllById(List&lt;Author&gt;)
+     └── AuthorServiceImpl.getAllById(List&lt;Author&gt;)
+         └── Collection.stream()
+             ├── stream() in UnmodifiableEntrySet in UnmodifiableMap in Collections
+             ├── stream() in ListFromStream in ListAssert
+             ├── stream() in ReverseOrderLinkedListView in LinkedList
+             └── ...
+ └── List.size()
+     └── ...
+ └── BookService.addAuthor(Book, Author)
+     └── BookServiceImpl.addAuthor(Book, Author)
+         ├── Book.java
+         ├── ArrayList.ArrayList()
+         ├── List.contains(Object)
+         │   ├── contains(Object) in SingletonList in Collections
+         │   └── ...
+         └── ResourceAlreadyExistsException.ResourceAlreadyExistsException(String)
+             └── RuntimeException.RuntimeException(String)
+ └── Iterable.forEach(Consumer&lt;? super T&gt;)
+     └── ...
+ └── BookService.save(Book)
+     └── BookServiceImpl.save(Book)
+         └── BookRepository.save(Book)
+             └── BookRepositoryJdbc.save(Book)
+                 ├── Book.java
+                 ├── GenericDaoDb.update(T)
+                 │   ├── PublisherDaoJdbc.update(Publisher)
+                 │   ├── ...
+                 ├── GenericDaoDb.insert(T)
+                 │   ├── BookDaoJdbc.insert(Book)
+                 │   └── ...
+                 ├── Book.java
+                 └── GenericDaoCache.clearCache()
+                     └── BookDaoCacheImpl.clearCache()
+ResponseEntity.ResponseEntity(HttpStatusCode)
+<br><br><br>BookInsertGenresUseCase.execute(Integer, List&lt;Genre&gt;)
+ └── BookInsertGenresUseCaseImpl.execute(Integer, List&lt;Genre&gt;)
+     └── BookService.getById(long)
+         └── BookServiceImpl.getById(long)
+             └── BookRepository.getById(long)
+                 └── BookRepositoryJdbc.getById(long)
+                     └── GenericDaoDb.getById(long)
+                         ├── GenreDaoJdbc.getById(long)
+                         │   └── BaseDaoJdbc.getById(long)
+                         ├── PublisherDaoJdbc.getById(long)
+                         │   └── BaseDaoJdbc.getById(long)
+                         ├── BaseDaoJdbc.getById(long)
+                         │   ├── EntityMetadataExtractor.getSelectTable()
+                         │   ├── BaseDaoJdbc.queryForOptional(String, Object...)
+                         │   ├── GenreDaoJdbc.getById(long)
+                         │   ├── PublisherDaoJdbc.getById(long)
+                         │   ├── BookDaoJdbc.getById(long)
+                         │   ├── AuthorDaoJdbc.getById(long)
+                         │   └── CategoryDaoJdbc.getById(long)
+                         └── BookDaoJdbc.getById(long)
+                             └── BaseDaoJdbc.getById(long)
+                         ├── AuthorDaoJdbc.getById(long)
+                         │   └── BaseDaoJdbc.getById(long)
+                         └── CategoryDaoJdbc.getById(long)
+                             └── BaseDaoJdbc.getById(long)
+ └── ResourceNotFoundException.ResourceNotFoundException(String)
+     └── RuntimeException.RuntimeException(String)
+ └── Optional.orElseThrow(Supplier&lt;? extends X&gt;)
+ └── GenreService.getAllById(List&lt;Genre&gt;)
+     └── GenreServiceImpl.getAllById(List&lt;Genre&gt;)
+         └── Collection.stream()
+             ├── stream() in UnmodifiableEntrySet in UnmodifiableMap in Collections
+             ├── stream() in ListFromStream in ListAssert
+             ├── stream() in ReverseOrderLinkedListView in LinkedList
+             ├── stream() in SynchronizedCollection in Collections
+             ├── stream() in SetFromMap in Collections
+             ├── ReverseOrderDequeView.stream()
+             ├── stream() in UnmodifiableEntrySet in UnmodifiableMultiValueMap
+             ├── stream() in CopiesList in Collections
+             ├── stream() in UnmodifiableCollection in Collections
+             ├── stream() in AsLIFOQueue in Collections
+             ├── ReverseOrderListView.stream()
+             ├── stream() in Reversed in CopyOnWriteArrayList
+             ├── ReverseOrderSortedSetView.stream()
+             ├── stream() in UnmodifiableValueCollection in UnmodifiableMultiValueMap
+             ├── stream() in ViewCollection in AbstractMap
+             └── stream() in CheckedCollection in Collections
+ └── Genre.java
+ └── Stream.map(Function&lt;? super T, ? extends R&gt;)
+     └── ReferencePipeline.map(Function&lt;? super P_OUT, ? extends R&gt;)
+ └── Stream.toArray(IntFunction&lt;A[]&gt;)
+     └── ReferencePipeline.toArray(IntFunction&lt;A[]&gt;)
+ └── GenreRepository.getAllById(Long[])
+     └── GenreRepositoryJdbc.getAllById(Long[])
+ └── List.size()
+     └── ...
+ └── BookService.addGenre(Book, Genre)
+     └── BookServiceImpl.addGenre(Book, Genre)
+         ├── Book.java
+         ├── ArrayList.ArrayList()
+         ├── List.contains(Object)
+         │   ├── contains(Object) in SingletonList in Collections
+         │   ├── contains(Object) in CopiesList in Collections
+         │   ├── FastList.contains(Object)
+         │   ├── XSObjectListImpl.contains(Object)
+         │   ├── AutoPopulatingList.contains(Object)
+         │   ├── Vector.contains(Object)
+         │   ├── ArrayList.contains(Object)
+         │   └── ...
+         └── ResourceAlreadyExistsException.ResourceAlreadyExistsException(String)
+             └── RuntimeException.RuntimeException(String)
+ └── Iterable.forEach(Consumer&lt;? super T&gt;)
+     └── ...
+ └── BookService.save(Book)
+     └── BookServiceImpl.save(Book)
+         └── ResponseEntity.ResponseEntity(HttpStatusCode)
+<br><br><br>BookInsertUseCase.execute(Book)
+ └── BookInsertUseCaseImpl.execute(Book)
+     ├── Book.java (2 usages)
+     ├── BookService.getByIsbn(String)
+     │   └── BookServiceImpl.getByIsbn(String)
+     ├── Optional.isPresent()
+     ├── ResourceAlreadyExistsException.ResourceAlreadyExistsException(String)
+     │   └── RuntimeException.RuntimeException(String)
+     └── BookRelationHandlerImpl.resolveRelations(Book)
+         ├── Book.java (2 usages)
+         ├── Publisher.java
+         ├── PublisherService.getById(Long)
+         │   └── PublisherServiceImpl.getById(Long)
+         ├── Publisher.java
+         ├── ResourceNotFoundException.ResourceNotFoundException(String) (2 usages)
+         │   └── RuntimeException.RuntimeException(String)
+         ├── Optional.orElseThrow(Supplier&lt;? extends X&gt;) (2 usages)
+         ├── Book.java
+         ├── Book.java (2 usages)
+         ├── Category.java (2 usages)
+         ├── CategoryService.getById(Long)
+         │   └── CategoryServiceImpl.getById(Long)
+         ├── Book.java
+         ├── Book.java
+         ├── AuthorService.getAllById(List&lt;Author&gt;)
+         │   └── AuthorServiceImpl.getAllById(List&lt;Author&gt;)
+         ├── Book.java
+         ├── Book.java
+         └── GenreService.getAllById(List&lt;Genre&gt;)
+             └── GenreServiceImpl.getAllById(List&lt;Genre&gt;)
+ └── BookService.save(Book)
+     └── BookServiceImpl.save(Book)
+         └── BookRepository.save(Book)
+             └── BookRepositoryJdbc.save(Book)
+                 ├── Book.java
+                 ├── GenericDaoDb.update(T)
+                 │   ├── PublisherDaoJdbc.update(Publisher)
+                 │   ├── CategoryDaoJdbc.update(Category)
+                 │   ├── BookDaoJdbc.update(Book)
+                 │   ├── AuthorDaoJdbc.update(Author)
+                 │   ├── BaseDaoJdbc.update(T)
+                 │   └── GenreDaoJdbc.update(Genre)
+                 ├── GenericDaoDb.insert(T)
+                 │   ├── BookDaoJdbc.insert(Book)
+                 │   ├── CategoryDaoJdbc.insert(Category)
+                 │   ├── PublisherDaoJdbc.insert(Publisher)
+                 │   ├── AuthorDaoJdbc.insert(Author)
+                 │   ├── BaseDaoJdbc.insert(T)
+                 │   └── GenreDaoJdbc.insert(Genre)
+                 ├── Book.java
+                 └── GenericDaoCache.clearCache()
+                     └── BookDaoCacheImpl.clearCache()
+ResponseEntity.ResponseEntity(HttpStatusCode) (org.springframework.http)
+<br><br><br>BookUpdateUseCaseImpl.execute(Book)
+ ├── Book.java (2 usages)
+ ├── BookService.getById(long)
+ │   └── BookServiceImpl.getById(long)
+ │       └── BookRepository.getById(long)
+ │           └── BookRepositoryJdbc.getById(long)
+ │               └── GenericDaoDb.getById(long)
+ │                   ├── GenreDaoJdbc.getById(long)
+ │                   │   └── BaseDaoJdbc.getById(long)
+ │                   ├── PublisherDaoJdbc.getById(long)
+ │                   │   └── BaseDaoJdbc.getById(long)
+ │                   ├── BaseDaoJdbc.getById(long)
+ │                   │   ├── EntityMetadataExtractor.getSelectTable()
+ │                   │   ├── BaseDaoJdbc.queryForOptional(String, Object...)
+ │                   │   ├── GenreDaoJdbc.getById(long)
+ │                   │   ├── PublisherDaoJdbc.getById(long)
+ │                   │   ├── BookDaoJdbc.getById(long)
+ │                   │   ├── AuthorDaoJdbc.getById(long)
+ │                   │   └── CategoryDaoJdbc.getById(long)
+ │                   └── BookDaoJdbc.getById(long)
+ │                       └── BaseDaoJdbc.getById(long)
+ │                   ├── AuthorDaoJdbc.getById(long)
+ │                   │   └── BaseDaoJdbc.getById(long)
+ │                   └── CategoryDaoJdbc.getById(long)
+ │                       └── BaseDaoJdbc.getById(long)
+ ├── Optional.isEmpty()
+ ├── ResourceNotFoundException.ResourceNotFoundException(String)
+ │   └── RuntimeException.RuntimeException(String)
+ └── BookRelationHandlerImpl.resolveRelations(Book)
+     ├── Book.java (2 usages)
+     ├── Publisher.java
+     ├── PublisherService.getById(Long)
+     │   └── PublisherServiceImpl.getById(Long)
+     ├── Publisher.java
+     ├── ResourceNotFoundException.ResourceNotFoundException(String) (2 usages)
+     │   └── RuntimeException.RuntimeException(String)
+     ├── Optional.orElseThrow(Supplier&lt;? extends X&gt;) (2 usages)
+     ├── Book.java
+     ├── Book.java (2 usages)
+     ├── Category.java (2 usages)
+     ├── CategoryService.getById(Long)
+     │   └── CategoryServiceImpl.getById(Long)
+     ├── Book.java
+     ├── Book.java
+     ├── AuthorService.getAllById(List&lt;Author&gt;)
+     │   └── AuthorServiceImpl.getAllById(List&lt;Author&gt;)
+     ├── Book.java
+     ├── Book.java
+     └── GenreService.getAllById(List&lt;Genre&gt;)
+         └── GenreServiceImpl.getAllById(List&lt;Genre&gt;)
+ └── BookService.save(Book)
+     └── BookServiceImpl.save(Book)
+         └── BookRepository.save(Book)
+             └── BookRepositoryJdbc.save(Book)
+                 ├── Book.java
+                 ├── GenericDaoDb.update(T)
+                 │   ├── PublisherDaoJdbc.update(Publisher)
+                 │   ├── CategoryDaoJdbc.update(Category)
+                 │   ├── BookDaoJdbc.update(Book)
+                 │   ├── AuthorDaoJdbc.update(Author)
+                 │   ├── BaseDaoJdbc.update(T)
+                 │   └── GenreDaoJdbc.update(Genre)
+                 ├── GenericDaoDb.insert(T)
+                 │   ├── BookDaoJdbc.insert(Book)
+                 │   ├── CategoryDaoJdbc.insert(Category)
+                 │   ├── PublisherDaoJdbc.insert(Publisher)
+                 │   ├── AuthorDaoJdbc.insert(Author)
+                 │   ├── BaseDaoJdbc.insert(T)
+                 │   └── GenreDaoJdbc.insert(Genre)
+                 ├── Book.java
+                 └── GenericDaoCache.clearCache()
+                     └── BookDaoCacheImpl.clearCache()
+ResponseEntity.ResponseEntity(HttpStatusCode) (org.springframework.http)
+<br><br><br>BookDeleteUseCase.execute(long)
+ └── BookDeleteUseCaseImpl.execute(long)
+     ├── BookService.getById(long)
+     │   └── BookServiceImpl.getById(long)
+     │       └── BookRepository.getById(long)
+     │           └── BookRepositoryJdbc.getById(long)
+     │               └── GenericDaoDb.getById(long)
+     │                   ├── GenreDaoJdbc.getById(long)
+     │                   │   └── BaseDaoJdbc.getById(long)
+     │                   ├── PublisherDaoJdbc.getById(long)
+     │                   │   └── BaseDaoJdbc.getById(long)
+     │                   ├── BaseDaoJdbc.getById(long)
+     │                   │   ├── EntityMetadataExtractor.getSelectTable()
+     │                   │   ├── BaseDaoJdbc.queryForOptional(String, Object...)
+     │                   │   ├── GenreDaoJdbc.getById(long)
+     │                   │   ├── PublisherDaoJdbc.getById(long)
+     │                   │   ├── BookDaoJdbc.getById(long)
+     │                   │   ├── AuthorDaoJdbc.getById(long)
+     │                   │   └── CategoryDaoJdbc.getById(long)
+     │                   └── BookDaoJdbc.getById(long)
+     │                       └── BaseDaoJdbc.getById(long)
+     │                   ├── AuthorDaoJdbc.getById(long)
+     │                   │   └── BaseDaoJdbc.getById(long)
+     │                   └── CategoryDaoJdbc.getById(long)
+     │                       └── BaseDaoJdbc.getById(long)
+     ├── ResourceNotFoundException.ResourceNotFoundException(String)
+     │   └── RuntimeException.RuntimeException(String)
+     ├── Optional.orElseThrow(Supplier&lt;? extends X&gt;)
+     └── BookService.delete(long)
+         └── BookServiceImpl.delete(long)
+             └── BookRepository.delete(long)
+                 └── BookRepositoryJdbc.delete(long)
+                     └── GenericDaoDb.delete(long)
+                         ├── BaseDaoJdbc.delete(long)
+                         ├── GenreDaoJdbc.delete(long)
+                         ├── BookDaoJdbc.delete(long)
+                         ├── PublisherDaoJdbc.delete(long)
+                         ├── CategoryDaoJdbc.delete(long)
+                         └── AuthorDaoJdbc.delete(long)
+                     └── GenericDaoCache.clearCache()
+                         └── BookDaoCacheImpl.clearCache()
+ResponseEntity.ResponseEntity(HttpStatusCode) (org.springframework.http)
+]]></description><link>8-jerarquia-de-llamadas-de-métodos\admin-call-hierarchy.html</link><guid isPermaLink="false">8- Jerarquia de llamadas de métodos/Admin Call Hierarchy.md</guid><pubDate>Tue, 26 Nov 2024 09:31:47 GMT</pubDate></item><item><title><![CDATA[getAll]]></title><description><![CDATA[ 
+ <br><br>BaseController.getPageSize(Integer)
+ └── Integer.parseInt(String) (java.lang)
+BookGetAllUseCase.execute(int, int)
+ └── BookGetAllUseCaseImpl.execute(int, int)
+     ├── BookService.getAll()
+     │   └── BookServiceImpl.getAll()
+     │       └── BookRepository.getAll()
+     │           └── BookRepositoryJdbc.getAll()
+     │               └── GenericDaoDb.getAll()
+     │                   ├── PublisherDaoJdbc.getAll()
+     │                   │   └── BaseDaoJdbc.getAll()
+     │                   ├── AuthorDaoJdbc.getAll()
+     │                   │   └── BaseDaoJdbc.getAll()
+     │                   ├── CategoryDaoJdbc.getAll()
+     │                   │   └── BaseDaoJdbc.getAll()
+     │                   ├── BaseDaoJdbc.getAll()
+     │                   │   ├── EntityMetadataExtractor.getSelectTable()
+     │                   │   ├── JdbcTemplate.query(String, RowMapper&lt;T&gt;) (org.springframework.jdbc.core)
+     │                   │   ├── AuthorDaoJdbc.getAll()
+     │                   │   ├── PublisherDaoJdbc.getAll()
+     │                   │   ├── CategoryDaoJdbc.getAll()
+     │                   │   ├── BookDaoJdbc.getAll()
+     │                   │   └── GenreDaoJdbc.getAll()
+     │                   ├── GenreDaoJdbc.getAll()
+     │                   │   └── BaseDaoJdbc.getAll()
+     │                   └── BookDaoJdbc.getAll()
+     │                       └── BaseDaoJdbc.getAll()
+ModelMapper.map(Object, Class&lt;D&gt;) (org.modelmapper)
+BookCountUseCase.execute()
+ └── BookCountUseCaseImpl.execute()
+     ├── BookService.count()
+     │   └── BookServiceImpl.count()
+     │       └── BookRepository.count()
+     │           └── BookRepositoryJdbc.count()
+     │               └── GenericDaoDb.count()
+     │                   ├── BaseDaoJdbc.count()
+     │                   │   ├── EntityMetadataExtractor.getTableName()
+     │                   │   ├── JdbcTemplate.queryForObject(String, Class&lt;T&gt;) (org.springframework.jdbc.core)
+     │                   │   ├── CategoryDaoJdbc.count()
+     │                   │   │   └── BaseDaoJdbc.count()
+     │                   │   ├── GenreDaoJdbc.count()
+     │                   │   │   └── BaseDaoJdbc.count()
+     │                   │   ├── AuthorDaoJdbc.count()
+     │                   │   │   └── BaseDaoJdbc.count()
+     │                   │   ├── PublisherDaoJdbc.count()
+     │                   │   │   └── BaseDaoJdbc.count()
+     │                   │   └── BookDaoJdbc.count()
+     │                   │       └── BaseDaoJdbc.count()
+BaseController.getAll(int, Integer, Function&lt;Integer, List&lt;Entity&gt;&gt;, Function&lt;Entity, Collection&gt;, int, String)
+ ├── BaseController.getPageSize(Integer)
+ │   └── Integer.parseInt(String) (java.lang)
+ ├── Function.apply(T) (java.util.function)
+ ├── Collection.stream() (java.util)
+ ├── Stream.map(Function&lt;? super T, ? extends R&gt;) (java.util.stream)
+ ├── Stream.toList() (java.util.stream)
+ └── BaseController.createPaginatedResponse(List&lt;T&gt;, int, int, int, String) (com.fpmislata.basespring.controller.common)
+<br><br><br>BookGetByIsbnUseCase.execute(String)
+ └── BookGetByIsbnUseCaseImpl.execute(String)
+     ├── BookService.getByIsbn(String)
+     │   └── BookServiceImpl.getByIsbn(String)
+     │       └── BookRepository.getByIsbn(String)
+     │           └── BookRepositoryJdbc.getByIsbn(String)
+     │               ├── BookDaoCache.getByIsbn(String)
+     │               │   └── BookDaoCacheImpl.getByIsbn(String)
+     │               ├── PrintStream.println(String) (java.io)
+     │               │   └── SystemLogHandler.println(String) (org.apache.tomcat.util.log)
+     │               ├── BookDaoDb.getByIsbn(String) (com.fpmislata.basespring.persistence.dao.db)
+     │               │   └── BookDaoJdbc.getByIsbn(String) (com.fpmislata.basespring.persistence.dao.db.jdbc)
+     │               ├── GenericDaoCache.save(T) (com.fpmislata.basespring.persistence.dao.cache)
+     │               │   └── BookDaoCacheImpl.save(Book) (com.fpmislata.basespring.persistence.dao.cache.impl)
+     │               ├── Optional.ifPresent(Consumer&lt;? super T&gt;) (java.util)
+     │               └── Optional.or(Supplier&lt;? extends Optional&lt;? extends T&gt;&gt;) (java.util)
+     ├── ResourceNotFoundException.ResourceNotFoundException(String)
+     │   └── RuntimeException.RuntimeException(String) (java.lang)
+     └── Optional.orElseThrow(Supplier&lt;? extends X&gt;) (java.util)
+
+BookUser Mapper.toBookDetail(Book)
+ ├── ModelMapper.map(Object, Class&lt;D&gt;) (org.modelmapper)
+ ├── Book.java (3 usages) (com.fpmislata.basespring.domain.model)
+ ├── Publisher.java (2 usages) (com.fpmislata.basespring.domain.model)
+ ├── PublisherCollection.java (com.fpmislata.basespring.controller.common.entity.model.publisher)
+ ├── BookUser Detail.java (com.fpmislata.basespring.controller.user.userModel.book)
+ ├── Collection.stream() (2 usages) (java.util)
+ │   ├── stream() in UnmodifiableEntrySet in UnmodifiableMap in Collections (java.util)
+ │   ├── stream() in ListFromStream in ListAssert (org.assertj.core.api)
+ │   ├── stream() in ReverseOrderLinkedListView in LinkedList (java.util)
+ │   ├── stream() in SynchronizedCollection in Collections (java.util)
+ │   ├── stream() in SetFromMap in Collections (java.util)
+ │   ├── ReverseOrderDequeView.stream() (java.util)
+ │   ├── stream() in UnmodifiableEntrySet in UnmodifiableMultiValueMap (org.springframework.util)
+ │   ├── stream() in CopiesList in Collections (java.util)
+ │   ├── stream() in UnmodifiableCollection in Collections (java.util)
+ │   ├── stream() in AsLIFOQueue in Collections (java.util)
+ │   ├── ReverseOrderListView.stream() (java.util)
+ │   ├── stream() in Reversed in CopyOnWriteArrayList (java.util.concurrent)
+ │   ├── ReverseOrderSortedSetView.stream() (java.util)
+ │   ├── stream() in UnmodifiableValueCollection in UnmodifiableMultiValueMap (org.springframework.util)
+ │   └── stream() in ViewCollection in AbstractMap (java.util)
+ ├── Author.java (2 usages) (com.fpmislata.basespring.domain.model)
+ ├── AuthorCollection.java (com.fpmislata.basespring.controller.common.entity.model.author)
+ ├── Stream.map(Function&lt;? super T, ? extends R&gt;) (2 usages) (java.util.stream)
+ │   └── ReferencePipeline.map(Function&lt;? super P_OUT, ? extends R&gt;) (java.util.stream)
+ ├── Collectors.toList() (2 usages) (java.util.stream)
+ ├── Stream.collect(Collector&lt;? super T, A, R&gt;) (2 usages) (java.util.stream)
+ │   └── ReferencePipeline.collect(Collector&lt;? super P_OUT, A, R&gt;) (java.util.stream)
+ ├── Genre.getName() (com.fpmislata.basespring.domain.model)
+ │   ├── LanguageUtils.getCurrentLanguage() (com.fpmislata.basespring.common.locale)
+ │   └── String.equals(Object) (java.lang)
+ ├── Category.getName() (com.fpmislata.basespring.domain.model)
+ │   ├── LanguageUtils.getCurrentLanguage() (com.fpmislata.b...
+. . .
+<br>]]></description><link>8-jerarquia-de-llamadas-de-métodos\user-call-hierarchy.html</link><guid isPermaLink="false">8- Jerarquia de llamadas de métodos/User Call Hierarchy.md</guid><pubDate>Tue, 26 Nov 2024 09:42:08 GMT</pubDate></item><item><title><![CDATA[Peticiones y datos a enviar a la API]]></title><description><![CDATA[ 
+ <br><br><br>USER -&gt; localhost:8080/api/books (Get)<br>
+ADMIN -&gt; localhost:8080/api/admin/books (Get)<br><br>USER -&gt; localhost:8080/api/books/9780142424179 (Get)<br>
+ADMIN -&gt; localhost:8080/api/admin/books/9780142424179 (Get)<br><br>(Admin) -&gt; localhost:8080/api/admin/books (Post)<br># BODY
+{
+    "isbn": "0034",
+    "titleEs": "Nuevo ",
+    "titleEn": "New book",
+    "synopsisEs": "Sinopsis nuevo libro",
+    "synopsisEn": "Synopsis new book",
+    "price": 12.30,
+    "discount": 0.5,
+    "cover": "nuevo_libro.jpg",
+    "publisher": {
+        "id": 2
+    },
+    "category": {
+        "id": 4
+    },
+    "genres": [
+        {
+            "id": 1
+        },
+        {
+            "id": 2
+        }
+    ],
+    "authors": [
+        {
+            "id": 3
+        },
+        {
+            "id": 4
+        }
+    ]
+}
+<br>Admin -&gt; localhost:8080/api/admin/books/88/authors (Post)<br>
+localhost:8080/api/admin/books/88/genres (Post)<br># BODY
+[
+    {
+        "id": 5
+    }
+]
+<br><br>Admin -&gt; localhost:8080/api/admin/books/8900 (Put)<br># BODY
+{
+    "id": 8900,
+    "isbn": "0030",
+    "titleEs": "hola",
+    "titleEn": "hola",
+    "synopsisEs": "hola presagios cuenta la historia de un ángel y un demonio que unen fuerzas para evitar el apocalipsis. Ambos han vivido en la Tierra durante siglos y se han encariñado con la humanidad, por lo que harán todo lo posible para detener el fin del mundo.",
+    "synopsisEn": "hola Omens tells the story of an angel and a demon who team up to prevent the apocalypse. Both have lived on Earth for centuries and have grown fond of humanity, so they will do everything possible to stop the end of the world.",
+    "price": 99,
+    "discount": 2,
+    "cover": "http://hola.cesguiro.es/books/9780060557912.jpg",
+    "publisher": {
+        "id": 1
+    },
+    "category": {
+        "id": 1
+    },
+    "genres": [
+        {
+            "id": 1
+        },
+        {
+            "id": 2
+        }
+    ],
+    "authors": [
+        {
+            "id": 1
+        },
+        {
+            "id": 2
+        }
+    ]
+}
+<br><br>Admin -&gt; localhost:8080/api/admin/books/89 (Delete)]]></description><link>9-utilidades-postman\utilidades-postman.html</link><guid isPermaLink="false">9- Utilidades Postman/Utilidades Postman.md</guid><pubDate>Tue, 26 Nov 2024 09:55:47 GMT</pubDate></item><item><title><![CDATA[ÍNDICE DE DESARROLLO WEB EN ENTORNO SERVIDOR]]></title><description><![CDATA[ 
+ <br><br><br>
+<br><a class="internal-link" data-href="./1- Ariquitectura por capas/Arquitectura por capas.md" href="1-ariquitectura-por-capas\arquitectura-por-capas.html" target="_self" rel="noopener nofollow">Arquitectura por capas</a>
+<br><br>
+<br><a class="internal-link" data-href="./2- API Rest/API-Rest.md" href="2-api-rest\api-rest.html" target="_self" rel="noopener nofollow">API-Rest</a>
+<br><br>
+<br><a class="internal-link" data-href="./3- Presentacion/Capa de Presentacion.md" href="3-presentacion\capa-de-presentacion.html" target="_self" rel="noopener nofollow">Capa de Presentacion</a>
+<br><br>
+<br><a class="internal-link" data-href="./4- Domain/Capa de Dominio.md" href="4-domain\capa-de-dominio.html" target="_self" rel="noopener nofollow">Capa de Dominio</a>
+<br><br>
+<br><a class="internal-link" data-href="./5- Persistence/Capa de persistencia.md" href="5-persistence\capa-de-persistencia.html" target="_self" rel="noopener nofollow">Capa de Persistencia</a>
+<br><br>
+<br><a class="internal-link" data-href="./6- Common/Package common.md" href="6-common\package-common.html" target="_self" rel="noopener nofollow">Paquete common (común a la app web)</a>
+<br><br>
+<br><a class="internal-link" data-href="./7- UML/basespring.png" href="7-uml\basespring.png" target="_self" rel="noopener nofollow">UML</a>
+<br><br>
+<br><a class="internal-link" data-href="./8- Jerarquia de llamadas de métodos/Admin Call Hierarchy.md" href="8-jerarquia-de-llamadas-de-métodos\admin-call-hierarchy.html" target="_self" rel="noopener nofollow">Llamada jerárquica de los métodos ADMINISTRADOR</a>
+<br><a class="internal-link" data-href="./8- Jerarquia de llamadas de métodos/User Call Hierarchy.md" href="8-jerarquia-de-llamadas-de-métodos\user-call-hierarchy.html" target="_self" rel="noopener nofollow">Llamada jerárquica de los métodos USUARIO SIN PRIVILEGIOS</a>
+<br><br>
+<br><a class="internal-link" data-href="./9- Utilidades Postman/Utilidades Postman.md" href="9-utilidades-postman\utilidades-postman.html" target="_self" rel="noopener nofollow">Utilidades</a>
+]]></description><link>index.html</link><guid isPermaLink="false">index.md</guid><pubDate>Tue, 26 Nov 2024 10:06:08 GMT</pubDate></item></channel></rss>
